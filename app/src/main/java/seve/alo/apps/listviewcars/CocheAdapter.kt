@@ -6,73 +6,67 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
-// Creamos nuestra clase CochesAdapter y le extendemos la clase BaseAdapter e implementamos los metodos que necesita
-class CocheAdapter(contexto: Context, var listaDECoches: ArrayList<Coche>) : BaseAdapter() {
+class CocheAdapter(context: Context, private var listCars: ArrayList<Coche>) : BaseAdapter() {
 
-    // Creamos una variable con el contexto
-    var contexto: Context? = contexto
+    private var contexto: Context? = context
 
     // En este metodo tendremos toda la logica para pintar cada uno de los elementos en nuestro ListView
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
+        val coche = listCars[p0]
+        return compareView(coche)
+    }
 
-        val coche = listaDECoches[p0]
-        if (coche.venta == true) {
-            val inflater =
-                contexto!!.getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val miVista = inflater.inflate(R.layout.molde_coche_grid, null)
-            miVista.findViewById<ImageView>(R.id.imageView).setImageResource(coche.imagen!!)
-            miVista.findViewById<TextView>(R.id.textViewTitulo).text = coche.titulo!!
-            miVista.findViewById<TextView>(R.id.textViewDescripcion).text = coche.descripcion!!
-            miVista.findViewById<TextView>(R.id.textViewPrecio).text = coche.precio!!.toString()
-
-            miVista.findViewById<ImageView>(R.id.imageView).setOnClickListener {
-                val intent = Intent(contexto, CocheActivity::class.java)
-                intent.putExtra("imagen", coche.imagen!!)
-                intent.putExtra("titulo", coche.titulo!!)
-                intent.putExtra("descriptcion", coche.descripcion!!)
-                intent.putExtra("precio", coche.precio!!)
-                contexto!!.startActivity(intent)
-            }
-            return miVista
-
+    private fun compareView(car: Coche): View {
+        return if (car.venta == true) {
+            val miVista = setValues(R.layout.molde_coche_grid, car)
+            setOnClickImageView(miVista, car)
+            miVista
         } else {
-            val inflater =
-                contexto!!.getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            val miVista = inflater.inflate(R.layout.molde_venta_grid, null)
-            miVista.findViewById<ImageView>(R.id.imageView).setImageResource(coche.imagen!!)
-            miVista.findViewById<TextView>(R.id.textViewTitulo).text = coche.titulo!!
-            miVista.findViewById<TextView>(R.id.textViewDescripcion).text = coche.descripcion!!
-            miVista.findViewById<TextView>(R.id.textViewPrecio).text = coche.precio!!.toString()
-
-            miVista.findViewById<ImageView>(R.id.imageView).setOnClickListener {
-                val intent = Intent(contexto, VentaActivity::class.java)
-                intent.putExtra("imagen", coche.imagen!!)
-                intent.putExtra("titulo", coche.titulo!!)
-                intent.putExtra("descriptcion", coche.descripcion!!)
-                intent.putExtra("precio", coche.precio!!)
-                contexto!!.startActivity(intent)
-            }
-
-            return miVista
+            val miVista = setValues(R.layout.molde_venta_grid, car)
+            setOnClickImageView(miVista, car)
+            miVista
         }
     }
 
-    // Estos dos metodos no son muy importantes
+    private fun setValues(molde: Int, coche: Coche): View {
+        val inflater =
+            contexto!!.getSystemService(AppCompatActivity.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        val miVista = inflater.inflate(molde, null)
+        miVista.findViewById<ImageView>(R.id.imageView).setImageResource(coche.imagen!!)
+        miVista.findViewById<TextView>(R.id.textViewTitulo).text = coche.titulo!!
+        miVista.findViewById<TextView>(R.id.textViewDescripcion).text = coche.descripcion!!
+        miVista.findViewById<TextView>(R.id.textViewPrecio).text = coche.precio!!.toString()
+
+        return miVista
+    }
+
+    private fun setOnClickImageView(
+        miVista: View,
+        coche: Coche
+    ) {
+        miVista.findViewById<ImageView>(R.id.imageView).setOnClickListener {
+            val intent = Intent(contexto, CocheActivity::class.java)
+            intent.putExtra("imagen", coche.imagen!!)
+            intent.putExtra("titulo", coche.titulo!!)
+            intent.putExtra("descriptcion", coche.descripcion!!)
+            intent.putExtra("precio", coche.precio!!)
+            contexto!!.startActivity(intent)
+        }
+    }
+
     override fun getItem(p0: Int): Any {
-        return listaDECoches[p0]
+        return listCars[p0]
     }
 
     override fun getItemId(p0: Int): Long {
         return p0.toLong()
     }
 
-    // Aqui devolvemos el total de elementos que tiene nuestro array de coches
     override fun getCount(): Int {
-        return listaDECoches.size
+        return listCars.size
     }
 }

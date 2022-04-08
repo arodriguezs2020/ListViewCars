@@ -2,25 +2,38 @@ package seve.alo.apps.listviewcars
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
-import kotlinx.android.synthetic.main.molde_coche.*
+import seve.alo.apps.listviewcars.databinding.ActivityVentaBinding
 
 // Creamos esta clase para que cuando el usuario haga click en la imagen pueda ver el producto en detalle, aqui entrara si no esta en venta
 class VentaActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityVentaBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_venta)
+        binding = ActivityVentaBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        callValuesIntent()
+    }
 
-        // Cremaos un Bundle para recoger la informacion que nos han mandado por el intent
+    private fun callValuesIntent() {
         val bundle: Bundle = intent.extras!!
-        val imagen = bundle.getInt("imagen")
-        val titulo = bundle.getString("titulo")
-        val descripcion = bundle.getString("descripcion")
-        val precio = bundle.getString("precio")
-        imageView.setImageResource(imagen)
-        textViewTitulo.text = titulo
-        textViewDescripcion.text = descripcion
-        textViewPrecio.text = precio
+        val image = bundle.getInt("imagen")
+        val title = bundle.getString("titulo")
+        val description = bundle.getString("descripcion")
+        val price = bundle.getString("precio")
+        setValues(image, title, description, price)
+    }
+
+    private fun setValues(
+        image: Int,
+        title: String?,
+        description: String?,
+        price: String?
+    ) {
+        binding.imageView.setImageResource(image)
+        binding.textViewTitulo.text = title
+        binding.textViewDescripcion.text = description
+        binding.textViewPrecio.text = price
     }
 }

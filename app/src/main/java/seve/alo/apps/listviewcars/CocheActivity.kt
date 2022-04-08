@@ -2,28 +2,36 @@ package seve.alo.apps.listviewcars
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
+import seve.alo.apps.listviewcars.databinding.ActivityCocheBinding
+
 // Creamos esta clase para que cuando el usuario haga click en la imagen pueda ver el producto en detalle, aqui entrara si esta en venta
 class CocheActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityCocheBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_coche)
+        binding = ActivityCocheBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        callValuesIntent()
+    }
 
-        val imageView = findViewById<ImageView>(R.id.imageView)
-        val textViewTitulo = findViewById<TextView>(R.id.textViewTitulo)
-        val textViewDescripcion = findViewById<TextView>(R.id.textViewDescripcion)
-        val textViewPrecio = findViewById<TextView>(R.id.textViewPrecio)
-
-        // Cremaos un Bundle para recoger la informacion que nos han mandado por el intent
+    private fun callValuesIntent(
+    ) {
         val bundle: Bundle = intent.extras!!
-        val imagen = bundle.getInt("imagen")
-        val titulo = bundle.getString("titulo")
-        val descripcion = bundle.getString("descripcion")
-        val precio = bundle.getString("precio")
-        imageView.setImageResource(imagen)
-        textViewTitulo.text = titulo
-        textViewDescripcion.text = descripcion
-        textViewPrecio.text = precio
+        val image = bundle.getInt("imagen")
+        val title = bundle.getString("titulo")
+        val description = bundle.getString("descripcion")
+        val price = bundle.getString("precio")
+        setValues(image, title, description, price)
+
+    }
+
+    private fun setValues(image: Int, title: String?, description: String?, price: String?
+    ) {
+        binding.imageView.setImageResource(image)
+        binding.textViewTitulo.text = title
+        binding.textViewDescripcion.text = description
+        binding.textViewPrecio.text = price
     }
 }
